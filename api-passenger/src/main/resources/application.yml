@@ -1,0 +1,9 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-passenger
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-7900:7900/eureka/
