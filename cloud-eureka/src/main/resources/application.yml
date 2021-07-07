@@ -9,7 +9,12 @@ eureka:
     fetch-registry: false
     service-url:
       defaultZone: http://eureka-7900:7900/eureka/,http://eureka-7901:7901/eureka/,http://eureka-7902:7902/eureka/
-
+  server:
+    renewal-percent-threshold: 0.85 #默认触发自我保护的值
+    eviction-interval-timer-in-ms: 1000  #剔除服务时间间隔
+    use-read-only-response-cache: false #关闭从readOnly读注册表   多级缓存，如果为true，先从readOnlyCacheMap里面获取。但是readWriteCacheMap（最准确的）和ReadOnly是30秒同步一次，不是强一致性的
+    response-cache-update-interval-ms: 1000 #默认更新是30s，这里优化 readWrite 和 readOnly 同步时间间隔
+    enable-self-preservation: false # 自我保护
 ---
 server:
   port: 7900
