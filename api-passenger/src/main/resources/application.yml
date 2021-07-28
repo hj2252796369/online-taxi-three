@@ -7,3 +7,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka-7900:7900/eureka/
+    registry-fetch-interval-seconds: 30
+  instance:
+    lease-renewal-interval-in-seconds: 10 #续约时间间隔
+
