@@ -3,6 +3,11 @@ package com.hujie.serviceverificationcode.service.impl;
 import com.hujie.internalcommon.dto.ResponseResult;
 import com.hujie.internalcommon.dto.serviceverificationcode.response.VerifyCodeResponse;
 import com.hujie.serviceverificationcode.service.VerifyCodeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: online-taxi-three
@@ -11,10 +16,21 @@ import com.hujie.serviceverificationcode.service.VerifyCodeService;
  * @author: huJie
  * @create: 2021-07-28 22:11
  **/
+@Service
 public class VerifyCodeServiceImpl implements VerifyCodeService {
+@Autowired
+    RedisTemplate redisTemplate;
+
     @Override
     public ResponseResult<VerifyCodeResponse> generate(int identity, String phoneNumber) {
-        return null;
+        String code = String.valueOf((int)((Math.random()*9+1)*Math.pow(10,5)));
+
+        redisTemplate.opsForValue().set(phoneNumber + code, 1, 10, TimeUnit.MILLISECONDS);
+
+        VerifyCodeResponse verifyCodeResponse = new VerifyCodeResponse();
+        verifyCodeResponse.setCode(code);
+
+        return ResponseResult.success(verifyCodeResponse);
     }
 
     public static void main(String[] args) {
@@ -31,7 +47,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
 
         start = System.currentTimeMillis();
         for (int i = 0; i < sum; i++) {
-            String codeTwo = String.valueOf((int)((Math.random()*9+1)*Math.pow(10,5)));//数字运算
+            String.valueOf((int)((Math.random()*9+1)*Math.pow(10,5)));//数字运算
         }
         end = System.currentTimeMillis();
         System.out.println(end - start);
