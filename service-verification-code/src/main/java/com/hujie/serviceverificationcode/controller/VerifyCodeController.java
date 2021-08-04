@@ -1,7 +1,6 @@
 package com.hujie.serviceverificationcode.controller;
 
 import com.hujie.internalcommon.dto.ResponseResult;
-import com.hujie.internalcommon.util.ParamCheckUtil;
 import com.hujie.serviceverificationcode.service.VerifyCodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +34,6 @@ public class VerifyCodeController {
     @GetMapping("/generate/{identity}/{phoneNumber}")
     public ResponseResult generate(@PathVariable("identity") int identity, @PathVariable("phoneNumber") String phoneNumber) {
         log.info("/generate/{identity}/{phoneNumber}:身份类型" + identity + ", 手机号：" + phoneNumber);
-        //参数校验
-        ParamCheckUtil.checkParamIsPhone(phoneNumber);
-
         return verifyCodeService.generate(identity, phoneNumber);
     }
 }

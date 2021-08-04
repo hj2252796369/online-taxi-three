@@ -11,4 +11,13 @@ public interface VerifyCodeService {
      * @return
      */
     public ResponseResult<VerifyCodeResponse> generate(int identity , String phoneNumber);
+
+    /**
+     * 校验身份，手机号，验证码的合法性
+     * @param identity
+     * @param phoneNumber
+     * @param code
+     * @return
+     */
+    public ResponseResult verify(int identity,String phoneNumber,String code);
 }
