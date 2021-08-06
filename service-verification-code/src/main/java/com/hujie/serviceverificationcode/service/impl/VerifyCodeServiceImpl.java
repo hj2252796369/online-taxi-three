@@ -1,11 +1,13 @@
 package com.hujie.serviceverificationcode.service.impl;
 
+import com.hujie.internalcommon.constant.CommonStatusEnum;
 import com.hujie.internalcommon.constant.IdentityConstant;
 import com.hujie.internalcommon.constant.RedisKeyPrefixConstant;
 import com.hujie.internalcommon.dto.ResponseResult;
 import com.hujie.internalcommon.dto.serviceverificationcode.response.VerifyCodeResponse;
 import com.hujie.internalcommon.util.ParamCheckUtil;
 import com.hujie.serviceverificationcode.service.VerifyCodeService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -65,7 +67,26 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
 
     @Override
     public ResponseResult verify(int identity, String phoneNumber, String code) {
-        return null;
+        //三档验证
+        // 一段时间内验证码错误的次数
+        // 一天失败的次数
+
+
+        //生成redis code
+        String preKey = generateKeyPreByIdentity(identity);
+        String redisKey = preKey + phoneNumber;
+
+        BoundValueOperations<String, String> boundValueOperations = redisTemplate.boundValueOps(redisKey);
+        String redisCode = boundValueOperations.get();
+
+        if(StringUtils.isNotBlank(code)
+                && StringUtils.isNotBlank(redisCode)
+                && code.trim().equals(redisCode.trim())) {
+
+            return ResponseResult.success("");
+        }else {
+            return ResponseResult.fail(CommonStatusEnum.VERIFY_CODE_ERROR.getCode(), CommonStatusEnum.VERIFY_CODE_ERROR.getValue());
+        }
     }
 
     public static void main(String[] args) {

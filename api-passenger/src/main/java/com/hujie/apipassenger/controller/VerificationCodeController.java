@@ -24,6 +24,11 @@ public class VerificationCodeController {
     @Autowired
     private VerificationCodeService verificationCodeService;
 
+    /**
+     * 发送验证码
+     * @param shortMsgRequest
+     * @return
+     */
     @PostMapping("/send")
     public ResponseResult sendCode(@RequestBody @Validated ShortMsgRequest shortMsgRequest){
         return verificationCodeService.sendCode(shortMsgRequest.getPhoneNumber());
