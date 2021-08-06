@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hujie.servicesms.dao.ServiceSmsTemplateCustomDao">
+    <resultMap id="BaseResultMap" type="com.hujie.servicesms.entity.ServiceSmsTemplate">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="template_id" jdbcType="VARCHAR" property="templateId" />
+        <result column="template_name" jdbcType="VARCHAR" property="templateName" />
+        <result column="template_content" jdbcType="VARCHAR" property="templateContent" />
+        <result column="template_type" jdbcType="BOOLEAN" property="templateType" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, template_id, template_name, template_content, template_type, create_time, update_time
+    </sql>
+    <!-- 根据templateId查询模板 -->
+    <select id="selectTemplateById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from service_sms_template
+        where template_id = #{templateId}
+    </select>
+</mapper>

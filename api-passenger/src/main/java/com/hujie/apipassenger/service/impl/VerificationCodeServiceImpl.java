@@ -1,6 +1,8 @@
 package com.hujie.apipassenger.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hujie.apipassenger.service.ServiceSmsRestTemplateService;
 import com.hujie.apipassenger.service.ServiceVerificationCodeRestTemplateService;
 import com.hujie.apipassenger.service.VerificationCodeService;
 import com.hujie.internalcommon.constant.CommonStatusEnum;
@@ -23,6 +25,8 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
     @Autowired
     private ServiceVerificationCodeRestTemplateService serviceVerificationCodeRestTemplateService;
 
+    @Autowired
+    private ServiceSmsRestTemplateService smsRestTemplateService;
 
     @Override
     public ResponseResult sendCode(String phoneNumber) {
@@ -31,15 +35,19 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
         ResponseResult generateCodeResult = serviceVerificationCodeRestTemplateService.generateCode(IdentityConstant.PASSENGER, phoneNumber);
         VerifyCodeResponse verifyCodeResponse = null;
         if(generateCodeResult.getCode() == CommonStatusEnum.SUCCESS.getCode()){
-            verifyCodeResponse = JSONObject.parseObject(generateCodeResult.getData().toString(), VerifyCodeResponse.class);
+            String data = JSON.toJSON(generateCodeResult.getData()).toString();
+            verifyCodeResponse = JSONObject.parseObject(data, VerifyCodeResponse.class);
         }else{
             return ResponseResult.fail("获取验证码失败");
         }
 
+        // 通过service-sms 发送验证码
         String code = verifyCodeResponse.getCode();
+        ResponseResult sendSmsResult = smsRestTemplateService.sendSms(phoneNumber, code);
+        if(sendSmsResult.getCode() == CommonStatusEnum.FAIL.getCode()){
+            return ResponseResult.fail("验证码发送失败");
+        }
 
-
-
-        return null;
+        return ResponseResult.success("");
     }
 }
