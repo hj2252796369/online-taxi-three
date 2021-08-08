@@ -1,6 +1,7 @@
 package com.hujie.apipassenger.service.impl;
 
 import com.hujie.apipassenger.service.AuthService;
+import com.hujie.apipassenger.service.ServicePassengerUserRestTemplateService;
 import com.hujie.apipassenger.service.ServiceVerificationCodeRestTemplateService;
 import com.hujie.internalcommon.constant.CommonStatusEnum;
 import com.hujie.internalcommon.constant.IdentityConstant;
@@ -19,7 +20,10 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    ServiceVerificationCodeRestTemplateService verificationCodeRestTemplateService;
+    private ServiceVerificationCodeRestTemplateService verificationCodeRestTemplateService;
+
+    @Autowired
+    private ServicePassengerUserRestTemplateService passengerUserRestTemplateService;
 
     @Override
     public ResponseResult auth(String passengerPhone, String code) {
@@ -30,8 +34,10 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 用户登录
-
-
-        return null;
+        ResponseResult loginResult = passengerUserRestTemplateService.login(passengerPhone);
+        if(loginResult.getCode() != CommonStatusEnum.SUCCESS.getCode()){
+            return ResponseResult.fail("登录失败：请重新登录");
+        }
+        return loginResult;
     }
 }

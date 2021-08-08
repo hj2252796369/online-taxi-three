@@ -40,7 +40,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
 
         // 存redis，2分钟过期
         BoundValueOperations boundValueOperations = redisTemplate.boundValueOps(redisKey);
-        boundValueOperations.set(code, 2, TimeUnit.MINUTES);
+        boundValueOperations.set(code, 10, TimeUnit.MINUTES);
 
         // 返回
         VerifyCodeResponse verifyCodeResponse = new VerifyCodeResponse();
