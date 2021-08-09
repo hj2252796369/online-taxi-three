@@ -52,7 +52,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
     /**
      * 根据身份前缀生成redisKey的前缀
      *
-     * @param identity
+     * @param identity identity
      * @return
      */
     private String generateKeyPreByIdentity(int identity) {

@@ -1,0 +1,28 @@
+server:
+  port: 9100
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7900/eureka/
+    registry-fetch-interval-seconds: 30
+    enabled: true
+    #,http://localhost:7901/eureka/,http://localhost:7902/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    hostname: localhost
+    instance-id: online-taxi-gateway
+spring:
+  application:
+    name: online-taxi-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # 从注册中心中拉去所有的服务  并且route成规则  拉去服务名和ip地址从而达到路由的效果
+      routes:
+        - id: verifyCode
+          predicates:
+            - Path=/verifyCode/**
+          uri: lb://SERVICE-VERFICATION-CODE  #lb起到了负载均衡的功能
+          filters:
+            - StripPrefix=1
