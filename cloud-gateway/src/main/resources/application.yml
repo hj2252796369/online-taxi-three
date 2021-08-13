@@ -26,3 +26,8 @@ spring:
           uri: lb://SERVICE-VERFICATION-CODE  #lb起到了负载均衡的功能
           filters:
             - StripPrefix=1
+        - id: authRoute
+          predicates:
+            - Path=/auth/**
+          uri: lb://API-PASSENGER
+

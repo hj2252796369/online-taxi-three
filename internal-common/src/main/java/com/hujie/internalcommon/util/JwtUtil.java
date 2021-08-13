@@ -3,6 +3,7 @@ package com.hujie.internalcommon.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 
 import java.util.Date;
 
@@ -48,6 +49,9 @@ public class JwtUtil {
         }catch (ExpiredJwtException e){
             e.printStackTrace();
             System.out.println("jwt过期了");
+        }catch (MalformedJwtException exception){
+            exception.printStackTrace();
+            System.out.println("Token格式不正确");
         }
 
         return null;

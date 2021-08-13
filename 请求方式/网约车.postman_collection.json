@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "f1e5f7e7-6f6e-45eb-9c5c-27f648868fb1",
+		"name": "网约车",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "生成验证码",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/verify-code/generate/1/15512341234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"verify-code",
+						"generate",
+						"1",
+						"15512341234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "发送请求获取验证码",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phoneNumber\":\"15872598980\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/verify-code/send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verify-code",
+						"send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "登录",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"passengerPhone\":\"15872598980\",\r\n    \"code\":\"962915\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "通过gateway转发发送验证码",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9100/SERVICE-VERFICATION-CODE/verify-code/generate/1/15512341234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9100",
+					"path": [
+						"SERVICE-VERFICATION-CODE",
+						"verify-code",
+						"generate",
+						"1",
+						"15512341234"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
