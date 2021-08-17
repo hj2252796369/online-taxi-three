@@ -58,7 +58,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
     private String generateKeyPreByIdentity(int identity) {
         String preKey = "";
         if (identity == IdentityConstant.PASSENGER) {
-            preKey = RedisKeyPrefixConstant.DRIVER_LOGIN_CODE_KEY_PRE;
+            preKey = RedisKeyPrefixConstant.PASSENGER_LOGIN_CODE_KEY_PRE;
         } else if (identity == IdentityConstant.DRIVER) {
             preKey = RedisKeyPrefixConstant.DRIVER_LOGIN_CODE_KEY_PRE;
         }

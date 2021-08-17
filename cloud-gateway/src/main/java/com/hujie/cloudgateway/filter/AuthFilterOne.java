@@ -18,6 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,13 @@ public class AuthFilterOne implements GlobalFilter, Ordered {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    private static List releaseUrlList = new ArrayList();
+
+    {
+        releaseUrlList.add("/auth/login");
+        releaseUrlList.add("verify-code/send");
+    }
+
     // 从exchange可以获取response
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -42,6 +50,9 @@ public class AuthFilterOne implements GlobalFilter, Ordered {
 
         // 对接口、auth/login    verify-code/send  接口放行
         URI uri = request.getURI();
+        if (releaseUrlList.contains(uri.getPath())) {
+            return chain.filter(exchange);
+        }
 
         List<String> authorization = request.getHeaders().get("Authorization");
         String token = "";
@@ -50,7 +61,6 @@ public class AuthFilterOne implements GlobalFilter, Ordered {
             JwtInfo tokenJwtInfo = JwtUtil.parseToken(token);
             if (null != tokenJwtInfo) {
                 String tokenUserId = tokenJwtInfo.getSubject();
-                Long tokenIssueDate = tokenJwtInfo.getIssueDate();
 
                 // 比较token
                 BoundValueOperations<String, String> stringStringBoundValueOperations = redisTemplate.boundValueOps(RedisKeyPrefixConstant.PASSENGER_LOGIN_TOKEN_APP_KEY_PRE + tokenUserId);
@@ -62,13 +72,13 @@ public class AuthFilterOne implements GlobalFilter, Ordered {
                 }
 
                 // 认证通过 更新认证时间
-                stringStringBoundValueOperations.increment(30);
+                stringStringBoundValueOperations.increment(180);
             } else {
                 DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("Token不正确~".getBytes());
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().writeWith(Mono.just(dataBuffer));
             }
-        }else{
+        } else {
             DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap("请先登录~".getBytes());
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().writeWith(Mono.just(dataBuffer));
